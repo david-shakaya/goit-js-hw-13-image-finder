@@ -7,9 +7,6 @@ import toastr, { error } from 'toastr';
      
 const clearDom = () => refs.sectionGallery.innerHTML = ''
 
-
-
-
 const KEY = '14396786-a714bdf8d854f524afdc45598';
 const perPage = 12
 

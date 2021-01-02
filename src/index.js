@@ -7,7 +7,8 @@ import '../node_modules/toastr/build/toastr.css';
 
 import debounce from 'lodash.debounce'
 
-console.log(clearDom());
+
+
 const input = refs.searchForm.firstElementChild
 input.addEventListener('input', debounce(getsInputValue, 500))
 let query = ''
