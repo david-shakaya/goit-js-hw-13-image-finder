@@ -5,7 +5,27 @@ import refs from './refs.js'
 // import { query } from '../index.js'
 import toastr, { error } from 'toastr';
      
-// const clearDom = () => refs.markupFromTempl.innerHTML = ''
+const clearDom = () => refs.sectionGallery.innerHTML = ''
+
+
+
+
+const KEY = '14396786-a714bdf8d854f524afdc45598';
+const perPage = 12
+
+
+function fetchImages(query) {
+fetch(`https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizontal&q=${query}&per_page=${perPage}`)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.hits);
+        const markup = galleryTemplate(data.hits)
+        refs.sectionGallery.insertAdjacentHTML('beforeend', markup)
+    })
+}
+
+export  { fetchImages,clearDom }
+
 
 
 
@@ -41,17 +61,3 @@ import toastr, { error } from 'toastr';
 //     }
 // const showToastrInfo = () => toastr["warning"]("Введите более конкретный запрос", "Слишком много совпадений")
 // const showToastrError = () =>error("Уточните запрос","Ошибка!Такой страны не существует")
-
-const KEY = '14396786-a714bdf8d854f524afdc45598';
-const perPage = 12
-
-function fetchImages() {
-fetch(`https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizontal&q=ye&per_page=${perPage}`)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.hits);
-        const markup = galleryTemplate(data.hits)
-        refs.markupFromTempl.insertAdjacentHTML('beforeend', markup)
-    })
-}
-fetchImages()
