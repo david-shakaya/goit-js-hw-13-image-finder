@@ -18,10 +18,22 @@ fetch(`https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizont
         console.log(data.hits);
         const markup = galleryTemplate(data.hits)
         refs.sectionGallery.insertAdjacentHTML('beforeend', markup)
+
+        window.addEventListener('scroll',()=>{
+	const {scrollHeight,scrollTop,clientHeight} = document.documentElement;
+            if (scrollTop + clientHeight > scrollHeight - 5) {
+                fetch(`https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizontal&q=${query}&per_page=${perPage}`)
+                const markup = galleryTemplate(data.hits)
+                refs.sectionGallery.insertAdjacentHTML('beforeend', markup)
+	}
+});
     })
 }
+// The Scroll Event.
 
 export  { fetchImages,clearDom }
+
+
 
 
 
