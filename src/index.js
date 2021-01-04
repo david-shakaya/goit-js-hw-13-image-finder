@@ -11,7 +11,7 @@ import '../node_modules/toastr/build/toastr.css';
 
 import debounce from 'lodash.debounce'
 
-
+console.log(refs.hideSpiner);
 
 const input = refs.searchForm.firstElementChild
 input.addEventListener('input', debounce(getsInputValue, 500))
@@ -24,6 +24,7 @@ query = e.target.value
         clearDom()
         return
     }
+    refs.hideSpiner.classList.add('loader')
     fetchImages(query)
     clearDom()
 
