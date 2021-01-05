@@ -1,8 +1,6 @@
 import galleryTemplate from '../templates/gallery-template.hbs';
 import refs from './refs.js'
 import showToastrInfo from './notifications.js'
-// import oneCountryTemplate from '../templates/one-Cty-Template.hbs';
-// import { query } from '../index.js'
 
      
 const clearDom = () => refs.sectionGallery.innerHTML = ''
@@ -38,10 +36,9 @@ function fetchImages(query) {
 // Scroll Event
 
 function fetchImagesNextPages(e) {
-    console.log(e);
     if (isEndPage) {
-    refs.hideSpiner.classList.remove('loader')
-    return
+        refs.hideSpiner.classList.remove('loader')
+        return
     }
     const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
     if (scrollTop + clientHeight > scrollHeight - 1) {
@@ -51,10 +48,8 @@ function fetchImagesNextPages(e) {
             .then(data => {
                 if (data.hits.length <= 11) {
                     isEndPage = true
-                    console.log('нижний меньше 11');
                 }
                 refs.hideSpiner.classList.add('loader')
-                console.log(page + 'Нижний');
                 const markupNextPage = galleryTemplate(data.hits)
                 refs.sectionGallery.insertAdjacentHTML('beforeend', markupNextPage)
             })
