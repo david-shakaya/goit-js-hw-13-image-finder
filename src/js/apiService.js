@@ -1,6 +1,8 @@
 import galleryTemplate from '../templates/gallery-template.hbs';
 import refs from './refs.js'
 import showToastrInfo from './notifications.js'
+import instance from './basicLightbox.js'
+import * as basicLightbox from 'basiclightbox'
 
      
 const clearDom = () => refs.sectionGallery.innerHTML = ''
@@ -10,6 +12,7 @@ const perPage = 12
 let page = 1
 let queryForPageTwo = ''
 let isEndPage = false
+let urlLargeImage = ''
 
 function fetchImages(query) {
     queryForPageTwo = query
@@ -25,7 +28,12 @@ function fetchImages(query) {
             refs.sectionGallery.insertAdjacentHTML('beforeend', markup)
             refs.hideSpiner.classList.remove('loader')
             console.log(page + 'верхний');
+// >>>
+            urlLargeImage = data.hits[0].largeImageURL
 
+            const gallery = document.querySelector('.gallery');
+            gallery.addEventListener('click', returnCurentImg)
+// >>>>
             if (data.hits.length <= 11) {
                 isEndPage = true
                 console.log('Верхний меньше 11');
@@ -55,6 +63,15 @@ function fetchImagesNextPages(e) {
             })
         }
         refs.hideSpiner.classList.remove('loader')
+}
+
+function returnCurentImg(e) {
+    if (e.target.nodeName === 'IMG') {
+        const instance = basicLightbox.create(`
+    <img src="${urlLargeImage}" width="800" height="600">
+`)
+instance.show()
+    }
 }
 
 
