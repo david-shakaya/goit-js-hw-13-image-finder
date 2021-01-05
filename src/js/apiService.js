@@ -1,9 +1,9 @@
 import galleryTemplate from '../templates/gallery-template.hbs';
 import refs from './refs.js'
-
+import showToastrInfo from './notifications.js'
 // import oneCountryTemplate from '../templates/one-Cty-Template.hbs';
 // import { query } from '../index.js'
-import toastr, { error } from 'toastr';
+
      
 const clearDom = () => refs.sectionGallery.innerHTML = ''
 
@@ -11,29 +11,48 @@ const KEY = '14396786-a714bdf8d854f524afdc45598';
 const perPage = 12
 let page = 1
 let queryForPageTwo = ''
+let isEndPage = false
 
 function fetchImages(query) {
     queryForPageTwo = query
     page = 1
+    isEndPage = false
     fetch(`https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizontal&q=${query}&page=${page}&per_page=${perPage}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            if (data.hits.length === 0) {
+                showToastrInfo()
+            }
             const markup = galleryTemplate(data.hits)
             refs.sectionGallery.insertAdjacentHTML('beforeend', markup)
             refs.hideSpiner.classList.remove('loader')
             console.log(page + 'верхний');
+
+            if (data.hits.length <= 11) {
+                isEndPage = true
+                console.log('Верхний меньше 11');
+                }
         })
     window.addEventListener('scroll', fetchImagesNextPages)
 }
 // Scroll Event
-function fetchImagesNextPages() {
+
+function fetchImagesNextPages(e) {
+    console.log(e);
+    if (isEndPage) {
+    refs.hideSpiner.classList.remove('loader')
+    return
+    }
     const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
     if (scrollTop + clientHeight > scrollHeight - 1) {
         page += 1
         fetch(`https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizontal&q=${queryForPageTwo}&page=${page}&per_page=${perPage}`)
             .then(response => response.json())
             .then(data => {
+                if (data.hits.length <= 11) {
+                    isEndPage = true
+                    console.log('нижний меньше 11');
+                }
                 refs.hideSpiner.classList.add('loader')
                 console.log(page + 'Нижний');
                 const markupNextPage = galleryTemplate(data.hits)

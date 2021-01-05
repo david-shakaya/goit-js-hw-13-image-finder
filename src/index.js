@@ -1,4 +1,5 @@
 import './styles.css';
+
 // import { fetchCountries, refs, clearDom } from './js/fetch-countries.js'
 import refs from './js/refs'
 import { fetchImages,clearDom } from './js/apiService'
