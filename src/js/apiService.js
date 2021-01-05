@@ -5,39 +5,44 @@ import refs from './refs.js'
 // import { query } from '../index.js'
 import toastr, { error } from 'toastr';
      
-const clearDom = () => {
-    refs.sectionGallery.innerHTML = ''
-}
-    
+const clearDom = () => refs.sectionGallery.innerHTML = ''
 
 const KEY = '14396786-a714bdf8d854f524afdc45598';
 const perPage = 12
-
+let page = 1
+let queryForPageTwo = ''
 
 function fetchImages(query) {
-fetch(`https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizontal&q=${query}&per_page=${perPage}`)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.hits);
-        const markup = galleryTemplate(data.hits)
-        refs.sectionGallery.insertAdjacentHTML('beforeend', markup)
-        refs.hideSpiner.classList.remove('loader')
-         
-        window.addEventListener('scroll',()=>{
-	const {scrollHeight,scrollTop,clientHeight} = document.documentElement;
-            if (scrollTop + clientHeight > scrollHeight - 1) {
-                fetch(`https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizontal&q=${query}&per_page=${perPage}`)
-             console.log(data.hits);
-             const markup = galleryTemplate(data.hits)
-             refs.sectionGallery.insertAdjacentHTML('beforeend', markup)
-                
-                
-               
-	}
-});
-    })
+    queryForPageTwo = query
+    page = 1
+    fetch(`https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizontal&q=${query}&page=${page}&per_page=${perPage}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            const markup = galleryTemplate(data.hits)
+            refs.sectionGallery.insertAdjacentHTML('beforeend', markup)
+            refs.hideSpiner.classList.remove('loader')
+            console.log(page + 'верхний');
+        })
+    window.addEventListener('scroll', fetchImagesNextPages)
 }
-// The Scroll Event.
+// Scroll Event
+function fetchImagesNextPages() {
+    const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
+    if (scrollTop + clientHeight > scrollHeight - 1) {
+        page += 1
+        fetch(`https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizontal&q=${queryForPageTwo}&page=${page}&per_page=${perPage}`)
+            .then(response => response.json())
+            .then(data => {
+                refs.hideSpiner.classList.add('loader')
+                console.log(page + 'Нижний');
+                const markupNextPage = galleryTemplate(data.hits)
+                refs.sectionGallery.insertAdjacentHTML('beforeend', markupNextPage)
+            })
+        }
+        refs.hideSpiner.classList.remove('loader')
+}
+
 
 export  { fetchImages,clearDom }
 
