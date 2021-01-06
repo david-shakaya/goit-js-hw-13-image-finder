@@ -1,18 +1,15 @@
 import galleryTemplate from '../templates/gallery-template.hbs';
 import refs from './refs.js'
-import showToastrInfo from './notifications.js'
-import instance from './basicLightbox.js'
-import * as basicLightbox from 'basiclightbox'
+import {showToastrInfo, showToastrSuccess} from './notifications.js'
+import returnCurentImg from './basicLightbox.js'
 
-     
-const clearDom = () => refs.sectionGallery.innerHTML = ''
+const clearDom = () => refs.ulGallery.innerHTML = ''
 
 const KEY = '14396786-a714bdf8d854f524afdc45598';
 const perPage = 12
 let page = 1
 let queryForPageTwo = ''
 let isEndPage = false
-let urlLargeImage = ''
 
 function fetchImages(query) {
     queryForPageTwo = query
@@ -23,17 +20,17 @@ function fetchImages(query) {
         .then(data => {
             if (data.hits.length === 0) {
                 showToastrInfo()
+            } else {
+                showToastrSuccess(data.totalHits)
             }
+            
             const markup = galleryTemplate(data.hits)
-            refs.sectionGallery.insertAdjacentHTML('beforeend', markup)
+            refs.ulGallery.insertAdjacentHTML('beforeend', markup)
             refs.hideSpiner.classList.remove('loader')
-            console.log(page + 'верхний');
-// >>>
-            urlLargeImage = data.hits[0].largeImageURL
 
             const gallery = document.querySelector('.gallery');
             gallery.addEventListener('click', returnCurentImg)
-// >>>>
+
             if (data.hits.length <= 11) {
                 isEndPage = true
                 console.log('Верхний меньше 11');
@@ -57,60 +54,17 @@ function fetchImagesNextPages(e) {
                 if (data.hits.length <= 11) {
                     isEndPage = true
                 }
+               
                 refs.hideSpiner.classList.add('loader')
                 const markupNextPage = galleryTemplate(data.hits)
-                refs.sectionGallery.insertAdjacentHTML('beforeend', markupNextPage)
+                refs.ulGallery.insertAdjacentHTML('beforeend', markupNextPage)
+                const gallery = document.querySelector('.gallery');
+                console.log(gallery);
+                gallery.addEventListener('click', returnCurentImg)
             })
-        }
+    }
         refs.hideSpiner.classList.remove('loader')
 }
 
-function returnCurentImg(e) {
-    if (e.target.nodeName === 'IMG') {
-        const instance = basicLightbox.create(`
-    <img src="${urlLargeImage}" width="800" height="600">
-`)
-instance.show()
-    }
-}
-
-
 export  { fetchImages,clearDom }
 
-
-
-
-
-
-// function fetchCountries() {
-//     fetch(`https://restcountries.eu/rest/v2/name/${query}`)
-//     .then(response => response.json())
-//         .then(data => {
-//         if (data.status === 404) {
-//                 showToastrError()
-//                 return
-//         }
-//         if (data.length === 1) {
-//             clearDom()
-//             const markup = oneCountryTemplate(data)
-//             refs.markupFromTempl.insertAdjacentHTML('beforeend', markup)
-//         }
-//         if (data.length > 1 && data.length<10) {
-//             const markup = listCountriesTemplate(data)
-//             refs.markupFromTempl.insertAdjacentHTML('beforeend', markup)
-//         } 
-//         if (data.length > 10) {
-//             showToastrInfo()
-//         }
-//     })
-// }
-// export { fetchCountries, refs, clearDom };
-
-//      toastr.options = {
-//         "progressBar": true,
-//         "showDuration": "0",
-//         "timeOut": "2500",
-//         "showMethod": "show",
-//     }
-// const showToastrInfo = () => toastr["warning"]("Введите более конкретный запрос", "Слишком много совпадений")
-// const showToastrError = () =>error("Уточните запрос","Ошибка!Такой страны не существует")

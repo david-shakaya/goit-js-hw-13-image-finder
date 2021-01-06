@@ -1,7 +1,7 @@
  const refs = {
      body: document.querySelector('body'),
      searchForm: document.querySelector('.search-form'),
-     sectionGallery: document.querySelector('.section-gallery'),
+     ulGallery:document.querySelector('.gallery'),
      hideSpiner:document.querySelector('#hide'),
 }
 

@@ -1,12 +1,11 @@
 import toastr from 'toastr';
-
-
+// let quantityImg = 0
      toastr.options = {
         "progressBar": true,
         "showDuration": "0",
         "timeOut": "2500",
         "showMethod": "show",
     }
- const showToastrInfo = () => toastr["warning"]("По вашему запросу ничего не найдено",)
-// const showToastrError = () =>error("Уточните запрос","Ошибка!Такой страны не существует")
-export default showToastrInfo
+const showToastrInfo = () => toastr["warning"]("По вашему запросу ничего не найдено",)
+const showToastrSuccess = (quantityImg) =>toastr["success"](`По вашему запросу найдено: ${quantityImg} изображений`)
+export { showToastrInfo, showToastrSuccess }
