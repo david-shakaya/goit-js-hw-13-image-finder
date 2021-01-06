@@ -1,5 +1,5 @@
 import toastr from 'toastr';
-// let quantityImg = 0
+
      toastr.options = {
         "progressBar": true,
         "showDuration": "0",
